@@ -96,31 +96,58 @@ class LocationForm extends Component {
         let lng = this.inputRefs.lng.current.value;
 
         let re = new RegExp(/^[-|+]?[0-9]*\.?[0-9]+$/g);
-        let latValid = lat.match(re), lngValid = lng.match(re);
-        let inputValid = latValid && lngValid;
+        let latPatternValid = lat.match(re), lngPatternValid = lng.match(re);
+        let patternValid = latPatternValid && lngPatternValid;
 
-        if (!inputValid) {
+
+        if (!patternValid) {
+
             toast.error('Coordinates must be valid numbers');
             setTimeout(() => {
                 toast.info('Press \'SET\' to revalidate');
             }, 500);
 
-            if (!latValid) {
+            if (!latPatternValid) {
                 this.inputRefs.lat.current.classList.add('input-error');
                 this.inputRefs.lat.current.focus();
             }
-            if (!lngValid) {
+            if (!lngPatternValid) {
                 this.inputRefs.lng.current.classList.add('input-error');
-                if (latValid) {
+                if (latPatternValid) {
                     this.inputRefs.lng.current.focus();
                 }
             }
-        } else if (lat !== userInput.lat || lng !== userInput.lng) {
-            userInput.lat = lat;
-            userInput.lng = lng;
+        } else {
+            let _lat = Number(lat);
+            let _lng = Number(lng);
+            let latRangeValid = (_lat >= -90 && _lat <= 90), lngRangeValid = (_lng >= -180 && _lng <= 180);
+            let rangeValid = latRangeValid && lngRangeValid;
+
+            if (!rangeValid) {
+
+                if (!latRangeValid) {
+                    toast.error('Lat should be in the range of [-90, 90]');
+                    this.inputRefs.lat.current.classList.add('input-error');
+                    this.inputRefs.lat.current.focus();
+                }
+                if (!lngRangeValid) {
+                    toast.error('Lng should be in the range of [-180, 180]');
+                    this.inputRefs.lng.current.classList.add('input-error');
+                    if (latRangeValid) {
+                        this.inputRefs.lng.current.focus();
+                    }
+                }
+                setTimeout(() => {
+                    toast.info('Press \'SET\' to revalidate');
+                }, 500);
+                
+            } else if (lat !== userInput.lat || lng !== userInput.lng) {
+                userInput.lat = lat;
+                userInput.lng = lng;
 
 
-            this.props.updateLocationInput(userInput);
+                this.props.updateLocationInput(userInput);
+            }
         }
     }
 
