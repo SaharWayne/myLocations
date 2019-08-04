@@ -140,11 +140,14 @@ class LocationForm extends Component {
                 setTimeout(() => {
                     toast.info('Press \'SET\' to revalidate');
                 }, 500);
-                
+
             } else if (lat !== userInput.lat || lng !== userInput.lng) {
+
+                this.inputRefs.lat.current.classList.remove('input-error');
+                this.inputRefs.lng.current.classList.remove('input-error');
+
                 userInput.lat = lat;
                 userInput.lng = lng;
-
 
                 this.props.updateLocationInput(userInput);
             }
@@ -155,6 +158,8 @@ class LocationForm extends Component {
     // Triggered by subcomponent MapContainer 
     // (Each time the user moves the marker manually, this function is called)
     updateCoords() {
+        this.inputRefs.lat.current.classList.remove('input-error');
+        this.inputRefs.lng.current.classList.remove('input-error');
         this.inputRefs.lat.current.value = this.props.input_location.lat;
         this.inputRefs.lng.current.value = this.props.input_location.lng;
     }
