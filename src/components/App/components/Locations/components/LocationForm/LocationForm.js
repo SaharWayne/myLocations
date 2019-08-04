@@ -20,7 +20,6 @@ class LocationForm extends Component {
             lat: React.createRef(),
             lng: React.createRef()
         };
-        this.formContainerRef = React.createRef();
         this.formAddressContainerRef = React.createRef();
         this.formSubmitRef = React.createRef();
 
@@ -32,6 +31,7 @@ class LocationForm extends Component {
         this.updateCoords = this.updateCoords.bind(this);
         this.getLocationInputs = this.getLocationInputs.bind(this);
         this.getGeoCodeFromPlaceId = this.getGeoCodeFromPlaceId.bind(this);
+        this.closeForm = this.closeForm.bind(this);
         this.formFilled = false;
     }
 
@@ -235,10 +235,10 @@ class LocationForm extends Component {
                 // Close form
                 if (timeoutAnimation) {
                     setTimeout(() => {
-                        this.props.closeForm(this.formContainerRef);
+                        this.closeForm();
                     }, 50);
                 } else {
-                    this.props.closeForm(this.formContainerRef);
+                    this.closeForm();
                 }
 
             }
@@ -280,11 +280,16 @@ class LocationForm extends Component {
         }
     }
 
+    closeForm() {
+        this.props.closeForm(null, true);
+    }
+
     render() {
         return (
-            <div className="component-form-container" onMouseDown={this.props.closeForm} ref={this.formContainerRef}>
+            <div className="component-form-container" onMouseDown={this.props.closeForm}>
                 <div className="component-form w-form">
                     <form className="component-form-inner" onSubmit={this.handleSubmit}>
+                        <div className='form-x-button-container'><h4 className='form-x-button' onClick={this.closeForm}>✖</h4></div>
                         {this.props.action === 'ADD' && <label htmlFor="category" className="form-field-label">Location Category</label>}
                         {this.props.action === 'ADD' &&
                             <select data-name="category" name="category" required=""
