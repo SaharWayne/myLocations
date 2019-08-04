@@ -160,7 +160,7 @@ class Locations extends Component {
                             <div className="text-block">No categories yet. Go back to the Categories and add one!</div>
 
                     }
-                    {this.props.action === 'VIEW' && <LocationViewer closeForm={this.disableCurrentAction} />}
+                    {this.props.action === 'VIEW' && <LocationViewer closeViewer={this.disableCurrentAction} />}
                 </div>
                 {(this.props.action === 'ADD' || (this.props.action === 'EDIT' && this.props.selected_location)) && <LocationForm closeForm={this.disableCurrentAction} />}
             </div>

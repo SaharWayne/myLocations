@@ -27,7 +27,7 @@ class MapViewer extends Component {
                         <Marker position={this.props.data.position} />
                     </Map>
                 </div>
-                <button className="view-location-map-button w-button" onClick={this.props.closeForm}>Close</button>
+                <button className="view-location-map-button w-button" onClick={this.props.closeViewer}>Close</button>
             </div>
         );
     }

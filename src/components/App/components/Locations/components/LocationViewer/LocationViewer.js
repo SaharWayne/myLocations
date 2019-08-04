@@ -23,23 +23,23 @@ class LocationViewer extends Component {
     // It is used to pass the data to subcomponents later on
     getViewData() {
         let location = this.props.categories_data
-        .find(val => val.name === this.props.ungrouped_category)
-        .locations[this.props.selected_location];
+            .find(val => val.name === this.props.ungrouped_category)
+            .locations[this.props.selected_location];
 
         return {
             category: this.props.ungrouped_category,
             name: this.props.selected_location,
             address: location.address,
-            position: {lat: location.lat, lng: location.lng}
+            position: { lat: location.lat, lng: location.lng }
         }
     }
 
     render() {
         return (
-            <div className="view-location-container" onMouseDown={this.props.closeForm}>
-                {this.props.view_mode === 'dialog' && <ViewerDialog />}
-                {this.props.view_mode === 'properties' && <PropertiesViewer  closeForm={this.props.closeForm} data={this.data}/>}
-                {this.props.view_mode === 'map' && <MapViewer closeForm={this.props.closeForm} data={this.data}/>}
+            <div className="view-location-container" onMouseDown={this.props.closeViewer}>
+                {this.props.view_mode === 'dialog' && <ViewerDialog closeViewer={this.props.closeViewer} />}
+                {this.props.view_mode === 'properties' && <PropertiesViewer closeViewer={this.props.closeViewer} data={this.data} />}
+                {this.props.view_mode === 'map' && <MapViewer closeViewer={this.props.closeViewer} data={this.data} />}
             </div>
         );
     }

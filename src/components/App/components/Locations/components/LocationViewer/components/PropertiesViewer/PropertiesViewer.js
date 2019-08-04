@@ -58,7 +58,7 @@ class PropertiesViewer extends Component {
                     <img src={copyIcon} onClick={this.copyField} copy="category" data-tip="Copy" width="25" alt="" className="image-copy-property" />
 
                     <h1 className="heading-location-property" ref={this.fieldsRefs.category}>{this.props.data.category}</h1>
-                </div><button className="view-location-properties-button w-button" onClick={this.props.closeForm}>Close</button>
+                </div><button className="view-location-properties-button w-button" onClick={this.props.closeViewer}>Close</button>
                 <ReactTooltip />
 
             </div>
