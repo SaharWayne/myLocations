@@ -8,13 +8,13 @@ const dataReducer = (state = {}, action) => {
                     name: action.payload,
                     locations: {},
                     date: new Date().toLocaleString()
-                }, ...state.data]
+                }, ...state.categories]
             };
             break;
         case 'ADD_LOCATION':
             state = {
                 ...state,
-                data: state.data.map((val) => {
+                data: state.categories.map((val) => {
                     if (val.name === action.payload.category) {
                         let newLocation = {
                             address: action.payload.address,
@@ -32,7 +32,7 @@ const dataReducer = (state = {}, action) => {
         case 'EDIT_CATEGORY':
             state = {
                 ...state,
-                data: state.data.map((val) => {
+                data: state.categories.map((val) => {
                     return {
                         ...val, name: val.name === state.selected_category ?
                             action.payload : val.name
@@ -43,7 +43,7 @@ const dataReducer = (state = {}, action) => {
         case 'EDIT_LOCATION':
             state = {
                 ...state,
-                data: state.data.map((val) => {
+                data: state.categories.map((val) => {
                     if (val.name === action.payload.category) {
                         let updatedLocations = { ...val.locations };
                         delete updatedLocations[state.selected_location];
@@ -61,22 +61,22 @@ const dataReducer = (state = {}, action) => {
             };
             break;
         case 'REMOVE_CATEGORY':
-            let numLocations = Object.keys(state.data.find(category => 
+            let numLocations = Object.keys(state.categories.find(category => 
                 { return (category.name === action.payload); }).locations).length;
             state = {
                 ...state,
-                data: state.data.filter(val => val.name !== action.payload),
-                action: state.data.length === 1 ? '' : state.action,
+                data: state.categories.filter(val => val.name !== action.payload),
+                action: state.categories.length === 1 ? '' : state.action,
                 locations_count: state.locations_count - numLocations
             };
             break;
         case 'REMOVE_LOCATION':
 
-            let locationsLength = Object.keys(state.data.find(val =>
+            let locationsLength = Object.keys(state.categories.find(val =>
                 val.name === state.selected_category).locations).length;
             state = {
                 ...state,
-                data: state.data.map((val) => {
+                data: state.categories.map((val) => {
                     if (val.name === state.selected_category) {
                         let updatedLocations = { ...val.locations };
                         delete updatedLocations[state.selected_location];
