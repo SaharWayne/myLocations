@@ -35,5 +35,6 @@ const AppErrorHandler = (error, componentStack) => {
     swal('Unfortunately the application has crashed. Local storage was restored to its initial state');
 };
 
+// Render Root
 ReactDOM.render(<Provider store={store}><Root /></Provider>, document.getElementById('root'));
 
