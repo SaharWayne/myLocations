@@ -15,7 +15,7 @@ class Root extends Component {
     render() {
         return (
             <Router history={browserHistory}>
-                <Route path='/' component={App}></Route>
+                <Route path={`${process.env.PUBLIC_URL}/`} component={App}></Route>
                 {/* ... More Routes */}
             </Router>
         );
