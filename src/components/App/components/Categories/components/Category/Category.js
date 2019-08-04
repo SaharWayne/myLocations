@@ -5,7 +5,6 @@ import categoryIcon from '../../images/category.svg'
 import { connect } from 'react-redux';
 import * as actions_data from '../../../../redux/actions/Data-actions';
 
-
 class Category extends Component {
 
     constructor(props) {
@@ -22,11 +21,21 @@ class Category extends Component {
             // ask the user for remove confirmation
             if (this.props.action === 'REMOVE') {
 
+                // Define remove function
+                let removeFunc = () => {
+                    if (this.props.categories_data.length === 1) {
+                        this.props.disableCurrentAction(null, true);
+                    }
+                    this.props.removeCategory(this.props.name);
+                };
+
+                // Get number of locations in this category
                 let numLocations = Object.keys(this.props.categories_data.find(category => {
                     return (category.name === this.props.name);
                 }).locations).length;
-
                 let str = numLocations > 1 ? 'locatios' : 'location';
+                
+                // Display warning if nececssary
                 if (numLocations > 0) {
                     swal({
                         title: 'Are you sure?',
@@ -36,13 +45,11 @@ class Category extends Component {
                         buttons: ['Cancel', 'Remove']
                     }).then((willRemove) => {
                         if (willRemove) {
-                            this.props.removeCategory(this.props.name);
-                            this.props.disableCurrentAction(null, true);
+                            removeFunc();
                         }
                     })
                 } else {
-                    this.props.removeCategory(this.props.name);
-                    this.props.disableCurrentAction(null, true);
+                    removeFunc();
                 }
             }
         }
@@ -67,14 +74,14 @@ const mapStateToProps = (state) => {
     return {
         action: state.operator.action,
         categories_data: state.data.categories,
-        is_category_dialog_open: state.data.is_category_dialog_open
+        is_category_dialog_open: state.data.is_category_dialog_open,
     };
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         removeCategory: (name) => dispatch(actions_data.removeCategory(name)),
-        setSelectedCategory: (name) => dispatch(actions_data.setSelectedCategory(name))
+        setSelectedCategory: (name) => dispatch(actions_data.setSelectedCategory(name)),
     };
 }
 

@@ -22,7 +22,6 @@ class MapContainer extends Component {
         this.props.updateCoords();
     }
 
-
     render() {
         return (
             <LocationPicker
@@ -30,9 +29,9 @@ class MapContainer extends Component {
                 mapElement={<div style={{ maxWidth: '450px', height: '173px' }} />}
                 defaultPosition={{
                     lat: this.props.input_location.lat == null ?
-                        25.761681 : this.props.input_location.lat,
+                        25.761681 : Number(this.props.input_location.lat),
                     lng: this.props.input_location.lng == null ?
-                        -80.191788 : this.props.input_location.lng
+                        -80.191788 : Number(this.props.input_location.lng)
                 }}
                 onChange={this.handleChange}
             />

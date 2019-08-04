@@ -1,4 +1,3 @@
-
 const dataReducer = (state = {}, action) => {
 
     switch (action.type) {
@@ -64,17 +63,14 @@ const dataReducer = (state = {}, action) => {
         case 'REMOVE_CATEGORY':
             let numLocations = Object.keys(state.categories.find(category => 
                 { return (category.name === action.payload); }).locations).length;
+
             state = {
                 ...state,
                 categories: state.categories.filter(val => val.name !== action.payload),
-                action: state.categories.length === 1 ? '' : state.action,
                 locations_count: state.locations_count - numLocations
             };
             break;
         case 'REMOVE_LOCATION':
-
-            let locationsLength = Object.keys(state.categories.find(val =>
-                val.name === state.selected_category).locations).length;
             state = {
                 ...state,
                 categories: state.categories.map((val) => {
@@ -85,8 +81,6 @@ const dataReducer = (state = {}, action) => {
                     }
                     return { ...val };
                 }),
-                action: locationsLength === 1 ? '' : state.action,
-                ungrouped_category: locationsLength === 1 ? '' : state.ungrouped_category,
                 locations_count: state.locations_count - 1
             };
             break;

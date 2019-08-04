@@ -22,7 +22,11 @@ class Location extends Component {
 
             if (this.props.action === 'REMOVE') {
                 this.props.removeLocation(this.props.name);
-                this.props.disableCurrentAction(null, true);
+
+                if (this.props.locations_count === 1) {
+                    this.props.disableCurrentAction(null, true);
+                    this.props.setUngroupedCategory('');
+                }
             }
         } else { // No action - vibrate!
             Vibration.vibrate(500);
@@ -44,7 +48,8 @@ class Location extends Component {
 const mapStateToProps = (state) => {
     return {
         action: state.operator.action,
-        is_location_dialog_open: state.data.is_location_dialog_open
+        is_location_dialog_open: state.data.is_location_dialog_open,
+        locations_count: state.data.locations_count
     };
 }
 
@@ -53,7 +58,8 @@ const mapDispatchToProps = (dispatch) => {
         setAction: (action) => dispatch(actions_operator.setAction(action)),
         removeLocation: (name) => dispatch(actions_data.removeLocation(name)),
         setSelectedLocation: (name) => dispatch(actions_data.setSelectedLocation(name)),
-        setSelectedCategory: (name) => dispatch(actions_data.setSelectedCategory(name))
+        setSelectedCategory: (name) => dispatch(actions_data.setSelectedCategory(name)),
+        setUngroupedCategory: (name) => dispatch(actions_data.setUngroupedCategory(name))
     };
 }
 

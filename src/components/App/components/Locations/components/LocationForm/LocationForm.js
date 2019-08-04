@@ -88,7 +88,8 @@ class LocationForm extends Component {
         this.formFilled = true;
     }
 
-    // This function sets the map coordinates to the input coordinates
+    // This function sets the coordinates input to state,
+    // which in turn locates the map's marker accordingly
     setCoords() {
         let userInput = this.getLocationInputs();
         let lat = this.inputRefs.lat.current.value;
@@ -117,6 +118,7 @@ class LocationForm extends Component {
         } else if (lat !== userInput.lat || lng !== userInput.lng) {
             userInput.lat = lat;
             userInput.lng = lng;
+
 
             this.props.updateLocationInput(userInput);
         }
@@ -280,6 +282,7 @@ class LocationForm extends Component {
         }
     }
 
+    // This function closes the form
     closeForm() {
         this.props.closeForm(null, true);
     }
