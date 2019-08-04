@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, hashHistory } from 'react-router';
 import ErrorBoundary from 'react-error-boundary';
+import { Router, Route, hashHistory } from 'react-router';
 import swal from 'sweetalert';
 import App from './components/App/App';
 import './index.css';
