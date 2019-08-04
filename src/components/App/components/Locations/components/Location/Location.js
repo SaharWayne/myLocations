@@ -22,6 +22,7 @@ class Location extends Component {
 
             if (this.props.action === 'REMOVE') {
                 this.props.removeLocation(this.props.name);
+                this.props.disableCurrentAction(null, true);
             }
         } else { // No action - vibrate!
             Vibration.vibrate(500);

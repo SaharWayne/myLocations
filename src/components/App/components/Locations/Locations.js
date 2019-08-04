@@ -150,7 +150,7 @@ class Locations extends Component {
                                         {
                                             Object.keys(category.locations).sort().map((location_name, j) => {
                                                 return <Location name={location_name} category={category.name} key={j}
-                                                    color={this.colors[j % this.colors.length]} />;
+                                                    color={this.colors[j % this.colors.length]} disableCurrentAction={this.disableCurrentAction}/>;
                                             })
                                         }
                                     </div> :

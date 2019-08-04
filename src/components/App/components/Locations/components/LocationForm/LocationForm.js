@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import swal from 'sweetalert'
 import ReactTooltip from 'react-tooltip';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { geocodeByPlaceId } from 'react-google-places-autocomplete';
@@ -205,9 +204,8 @@ class LocationForm extends Component {
             // Add 'input-error' class and focus if needed
             if (locationNameAlreadyExistsInCategory) {
                 this.inputRefs.name.current.classList.add('input-error');
-                swal('Location with this name already exists in this category!').then(() => {
-                    this.inputRefs.name.current.focus();
-                });
+                toast.error('Location with this name already exists in this category!');
+                this.inputRefs.name.current.focus();
             } else {
                 // Replace the original values of the coordinates if needed
                 let timeoutAnimation = false;

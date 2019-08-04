@@ -98,7 +98,7 @@ class Categories extends Component {
                 <div className="categories-list-container">
                     {this.props.categories_data.length > 0 ?
                         this.props.categories_data.map((category, i) => {
-                            return <Category name={category.name} date={category.date} key={i} />
+                            return <Category name={category.name} date={category.date} key={i} disableCurrentAction={this.disableCurrentAction}/>
                         }) :
                         <div className="text-block">No categories yet. Click the 'Add' button above</div>}
                 </div>

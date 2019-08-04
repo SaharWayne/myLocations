@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import swal from 'sweetalert'
 import '../../../../App.css';
 
 import { connect } from 'react-redux';
@@ -52,9 +51,8 @@ class CategoryForm extends Component {
                 // Check if location name already exists in category
                 if (this.props.categories_data.find(val => val.name === userInput_category)) {
                     this.inputRefs.name.current.classList.add('input-error');
-                    swal('Category with this name already exists!').then(() =>{
-                        this.inputRefs.name.current.focus();
-                    });
+                    toast.error('Category with this name already exists!');
+                    this.inputRefs.name.current.focus();
                 } else {
 
                     // Submit action

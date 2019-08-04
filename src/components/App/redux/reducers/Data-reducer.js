@@ -1,10 +1,11 @@
+
 const dataReducer = (state = {}, action) => {
 
     switch (action.type) {
         case 'ADD_CATEGORY':
             state = {
                 ...state,
-                data: [{
+                categories: [{
                     name: action.payload,
                     locations: {},
                     date: new Date().toLocaleString()
@@ -14,7 +15,7 @@ const dataReducer = (state = {}, action) => {
         case 'ADD_LOCATION':
             state = {
                 ...state,
-                data: state.categories.map((val) => {
+                categories: state.categories.map((val) => {
                     if (val.name === action.payload.category) {
                         let newLocation = {
                             address: action.payload.address,
@@ -32,7 +33,7 @@ const dataReducer = (state = {}, action) => {
         case 'EDIT_CATEGORY':
             state = {
                 ...state,
-                data: state.categories.map((val) => {
+                categories: state.categories.map((val) => {
                     return {
                         ...val, name: val.name === state.selected_category ?
                             action.payload : val.name
@@ -43,7 +44,7 @@ const dataReducer = (state = {}, action) => {
         case 'EDIT_LOCATION':
             state = {
                 ...state,
-                data: state.categories.map((val) => {
+                categories: state.categories.map((val) => {
                     if (val.name === action.payload.category) {
                         let updatedLocations = { ...val.locations };
                         delete updatedLocations[state.selected_location];
@@ -65,7 +66,7 @@ const dataReducer = (state = {}, action) => {
                 { return (category.name === action.payload); }).locations).length;
             state = {
                 ...state,
-                data: state.categories.filter(val => val.name !== action.payload),
+                categories: state.categories.filter(val => val.name !== action.payload),
                 action: state.categories.length === 1 ? '' : state.action,
                 locations_count: state.locations_count - numLocations
             };
@@ -76,7 +77,7 @@ const dataReducer = (state = {}, action) => {
                 val.name === state.selected_category).locations).length;
             state = {
                 ...state,
-                data: state.categories.map((val) => {
+                categories: state.categories.map((val) => {
                     if (val.name === state.selected_category) {
                         let updatedLocations = { ...val.locations };
                         delete updatedLocations[state.selected_location];

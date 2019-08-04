@@ -37,10 +37,12 @@ class Category extends Component {
                     }).then((willRemove) => {
                         if (willRemove) {
                             this.props.removeCategory(this.props.name);
+                            this.props.disableCurrentAction(null, true);
                         }
                     })
                 } else {
                     this.props.removeCategory(this.props.name);
+                    this.props.disableCurrentAction(null, true);
                 }
             }
         }
