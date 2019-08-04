@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, browserHistory } from 'react-router';
+import { Router, Route, hashHistory } from 'react-router';
 import App from './components/App/App';
 import './index.css';
 
@@ -14,8 +14,10 @@ import store from './components/App/redux/App-store'
 class Root extends Component {
     render() {
         return (
-            <Router history={browserHistory}>
-                <Route path={`${process.env.PUBLIC_URL}/`} component={App}></Route>
+            // Note that because this app is deployed to GitHub Pages,
+            // we use hashHistory instead of browserHistory because
+            <Router history={hashHistory}>
+                <Route path='/' component={App}></Route>
                 {/* ... More Routes */}
             </Router>
         );
