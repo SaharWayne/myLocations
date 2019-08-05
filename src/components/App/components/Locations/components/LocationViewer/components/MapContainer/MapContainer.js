@@ -28,7 +28,8 @@ class MapContainer extends Component {
                 containerElement={<div style={{ height: '100%' }} />}
                 mapElement={<div style={{ maxWidth: '450px', height: '173px' }} />}
                 defaultPosition={{
-                    lat: null,
+                    lat: this.props.input_location.lat == null ?
+                        25.761681 : Number(this.props.input_location.lat),
                     lng: this.props.input_location.lng == null ?
                         -80.191788 : Number(this.props.input_location.lng)
                 }}
