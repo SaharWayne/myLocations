@@ -1,24 +1,22 @@
-import React, { Component } from 'react';
+import React from 'react';
 import '../../LocationViewer.css';
 
 import { connect } from 'react-redux';
 import * as actions_data from '../../../../../../redux/actions/Data-actions';
 
-class ViewerDialog extends Component {
+const ViewerDialog = (props) => {
 
-    render() {
-        return (
-            <div className="view-location-dialog">
-                <div className='viewer-dialog-x-button-container'><h4 className='viewer-dialog-x-button' onClick={this.props.closeViewer}>✖</h4></div>
-                <h5 className="heading-4">{this.props.selected_location}</h5>
-                <div className="view-location-dialog-buttons">
-                    <button className="button w-button" onClick={() => { this.props.setViewMode('properties'); }}>View Properties</button>
-                    <button className="button w-button" onClick={() => { this.props.setViewMode('map'); }}>View Map</button>
-                </div>
+    return (
+        <div className="view-location-dialog">
+            <div className='viewer-dialog-x-button-container'><h4 className='viewer-dialog-x-button' onClick={props.closeViewer}>✖</h4></div>
+            <h5 className="heading-4">{props.selected_location}</h5>
+            <div className="view-location-dialog-buttons">
+                <button className="button w-button" onClick={() => { props.setViewMode('properties'); }}>View Properties</button>
+                <button className="button w-button" onClick={() => { props.setViewMode('map'); }}>View Map</button>
             </div>
+        </div>
 
-        );
-    }
+    );
 }
 
 const mapStateToProps = (state) => {

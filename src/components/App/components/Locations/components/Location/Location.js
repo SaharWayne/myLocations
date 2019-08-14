@@ -1,48 +1,39 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-import { Vibration } from 'react-native';
 import { connect } from 'react-redux';
 import * as actions_operator from '../../../../redux/actions/Operator-actions';
 import * as actions_data from '../../../../redux/actions/Data-actions';
 
 
-class Location extends Component {
-
-    constructor(props) {
-        super(props);
-        this.handleLocationClick = this.handleLocationClick.bind(this);
-    }
+const Location = (props) => {
 
     // This function handles location click according to the current action
-    handleLocationClick() {
-        this.props.setSelectedLocation(this.props.name);
+    const handleLocationClick = () => {
+        props.setSelectedLocation(props.name);
 
-        if (this.props.action !== '') { // action ADD/EDIT/REMOVE
-            this.props.setSelectedCategory(this.props.category);
+        if (props.action !== '') { // action ADD/EDIT/REMOVE
+            props.setSelectedCategory(props.category);
 
-            if (this.props.action === 'REMOVE') {
-                this.props.removeLocation(this.props.name);
+            if (props.action === 'REMOVE') {
+                props.removeLocation(props.name);
 
-                if (this.props.locations_count === 1) {
-                    this.props.disableCurrentAction(null, true);
-                    this.props.setUngroupedCategory('');
+                if (props.locations_count === 1) {
+                    props.disableCurrentAction(null, true);
+                    props.setUngroupedCategory('');
                 }
             }
-        } else { // No action - vibrate!
-            Vibration.vibrate(500);
-            this.props.setAction('VIEW');
+        } else {
+            props.setAction('VIEW');
         }
     }
 
-    render() {
-        return (
-            <h6 className={`category-item-location ${this.props.color} 
-            ${!this.props.is_location_dialog_open ?
-                    (this.props.action === 'EDIT' ?
-                        'shaking edit' : (this.props.action === 'REMOVE' ? 'shaking remove' : '')) : ''}`}
-                onClick={this.handleLocationClick}>{this.props.name}</h6>
-        );
-    }
+    return (
+        <h6 className={`category-item-location ${props.color} 
+            ${!props.is_location_dialog_open ?
+                (props.action === 'EDIT' ?
+                    'shaking edit' : (props.action === 'REMOVE' ? 'shaking remove' : '')) : ''}`}
+            onClick={handleLocationClick}>{props.name}</h6>
+    );
 }
 
 const mapStateToProps = (state) => {

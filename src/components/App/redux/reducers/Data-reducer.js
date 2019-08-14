@@ -1,3 +1,4 @@
+
 const dataReducer = (state = {}, action) => {
 
     switch (action.type) {
@@ -112,6 +113,7 @@ const dataReducer = (state = {}, action) => {
             state = { ...state, input_category: action.payload };
             break;
         case 'UPDATE_LOCATION_INPUT':
+            console.log('sesms ok');
             state = { ...state, input_location: action.payload };
             break;
         case 'UPDATE_MAP_POSITION':

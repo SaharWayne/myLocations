@@ -1,40 +1,36 @@
-import React, { Component } from 'react';
+import React from 'react';
 import swal from 'sweetalert';
 import categoryIcon from '../../images/category.svg'
 
 import { connect } from 'react-redux';
 import * as actions_data from '../../../../redux/actions/Data-actions';
 
-class Category extends Component {
+const Category = (props) => {
 
-    constructor(props) {
-        super(props);
-        this.handleCategoryClick = this.handleCategoryClick.bind(this);
-    }
 
     // This function handles location click according to the current action
-    handleCategoryClick() {
-        if (this.props.action !== '') { // action ADD/EDIT/REMOVE
-            this.props.setSelectedCategory(this.props.name);
+    const handleCategoryClick = () => {
+        if (props.action !== '') { // action ADD/EDIT/REMOVE
+            props.setSelectedCategory(props.name);
 
             // If action is REMOVE and the category contains locations, 
             // ask the user for remove confirmation
-            if (this.props.action === 'REMOVE') {
+            if (props.action === 'REMOVE') {
 
                 // Define remove function
                 let removeFunc = () => {
-                    if (this.props.categories_data.length === 1) {
-                        this.props.disableCurrentAction(null, true);
+                    if (props.categories_data.length === 1) {
+                        props.disableCurrentAction(null, true);
                     }
-                    this.props.removeCategory(this.props.name);
+                    props.removeCategory(props.name);
                 };
 
                 // Get number of locations in this category
-                let numLocations = Object.keys(this.props.categories_data.find(category => {
-                    return (category.name === this.props.name);
+                let numLocations = Object.keys(props.categories_data.find(category => {
+                    return (category.name === props.name);
                 }).locations).length;
                 let str = numLocations > 1 ? 'locatios' : 'location';
-                
+
                 // Display warning if nececssary
                 if (numLocations > 0) {
                     swal({
@@ -55,19 +51,17 @@ class Category extends Component {
         }
     }
 
-    render() {
-        return (
-            <div className={`category ${!this.props.is_category_dialog_open ?
-                (this.props.action === 'EDIT' ?
-                    'shaking edit' : (this.props.action === 'REMOVE' ? 'shaking remove' : '')) : ''}`}
-                onClick={this.handleCategoryClick}>
-                <div className="category-header"><img src={categoryIcon} width="30" alt="" />
-                    <h1 className="heading-category-list-item h1 body">{this.props.name}</h1>
-                </div>
-                <h6 className="category-item-sub-heading">Created on: {this.props.date}</h6>
+    return (
+        <div className={`category ${!props.is_category_dialog_open ?
+            (props.action === 'EDIT' ?
+                'shaking edit' : (props.action === 'REMOVE' ? 'shaking remove' : '')) : ''}`}
+            onClick={handleCategoryClick}>
+            <div className="category-header"><img src={categoryIcon} width="30" alt="" />
+                <h1 className="heading-category-list-item h1 body">{props.name}</h1>
             </div>
-        );
-    }
+            <h6 className="category-item-sub-heading">Created on: {props.date}</h6>
+        </div>
+    );
 }
 
 const mapStateToProps = (state) => {

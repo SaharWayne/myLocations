@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import ReactTooltip from 'react-tooltip';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
@@ -9,95 +9,88 @@ import '../../../../App.css';
 import { connect } from 'react-redux';
 import * as actions_data from '../../../../redux/actions/Data-actions';
 
-class LocationForm extends Component {
-    constructor(props) {
-        super(props);
+const LocationForm = (props) => {
 
-        this.inputRefs = {
-            category: React.createRef(),
-            name: React.createRef(),
-            address: React.createRef(),
-            lat: React.createRef(),
-            lng: React.createRef()
-        };
-        this.formAddressContainerRef = React.createRef();
-        this.formSubmitRef = React.createRef();
+    const formAddressContainerRef = useRef();
+    const formSubmitRef = useRef();
+    const inputRefs = {
+        category: useRef(),
+        name: useRef(),
+        address: useRef(),
+        lat: useRef(),
+        lng: useRef()
+    };
+    let formFilled = false;
 
-        this.fillControlledElements = this.fillControlledElements.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSelect = this.handleSelect.bind(this);
-        this.setCoords = this.setCoords.bind(this);
-        this.updateCoords = this.updateCoords.bind(this);
-        this.getLocationInputs = this.getLocationInputs.bind(this);
-        this.getGeoCodeFromPlaceId = this.getGeoCodeFromPlaceId.bind(this);
-        this.closeForm = this.closeForm.bind(this);
-        this.formFilled = false;
-    }
-
-
-    componentDidMount() {
+    // On first mount, fill the form if opened on EDIT mode
+    useEffect(() => {
         // If the used clicked 'EDIT', fill the form with the existing data
-        if (this.props.action === 'EDIT') {
-            this.fillControlledElements();
-            this.formSubmitRef.current.classList.remove('inactive');
+        if (props.action === 'EDIT') {
+            fillControlledElements();
+            formSubmitRef.current.classList.remove('inactive');
         }
+        props.setLocationDialogState(true);
+        //eslint-disable-next-line
+    }, []);
 
-        this.props.setLocationDialogState(true);
-    }
+    // On every render, update 'formFilled'
+    useEffect(() => {
+        updateFormFilled();
+    });
 
-    componentDidUpdate() {
-        // On update, set 'this.formFilled'
+    const updateFormFilled = (() => {
+        // On update, set 'formFilled'
         // This is used to bypass default functionality of <form/> element,
         // with the aim of activating/deactivating the form submit button (style wise)
+        let userInputs = getLocationInputs();
 
-        let userInputs = this.getLocationInputs();
-        this.formFilled = Object.keys(userInputs)
+        //eslint-disable-next-line
+        formFilled = Object.keys(userInputs)
             .filter((key) => { return !userInputs[key] || userInputs[key].length === 0 }).length === 0;
 
-        if (this.formFilled) {
-            this.formSubmitRef.current.classList.remove('inactive');
+        if (formFilled) {
+            formSubmitRef.current.classList.remove('inactive');
         } else {
-            this.formSubmitRef.current.classList.add('inactive');
+            formSubmitRef.current.classList.add('inactive');
         }
-    }
+    });
 
     // This function fills the form with the existing location data
-    fillControlledElements() {
-        let locationCategory = this.props.categories_data
-            .find(val => val.name === this.props.selected_category);
-        let location = locationCategory.locations[this.props.selected_location];
+    const fillControlledElements = () => {
+        const locationCategory = props.categories_data
+            .find(val => val.name === props.selected_category);
+        const location = locationCategory.locations[props.selected_location];
 
 
-        this.inputRefs.name.current.value = this.props.selected_location;
-        Object.keys(this.inputRefs).forEach((key) => {
+        inputRefs.name.current.value = props.selected_location;
+        Object.keys(inputRefs).forEach((key) => {
             if (key !== 'name' && key !== 'category') {
-                this.inputRefs[key].current.value = location[key];
+                inputRefs[key].current.value = location[key];
             }
         });
 
         let userInputs = {
-            category: this.props.selected_category,
-            name: this.props.selected_location,
+            category: props.selected_category,
+            name: props.selected_location,
             address: location.address,
             lat: location.lat,
             lng: location.lng
         }
 
-        this.props.updateLocationInput(userInputs);
-        this.formFilled = true;
+        props.updateLocationInput(userInputs);
+        formFilled = true;
     }
 
     // This function sets the coordinates input to state,
     // which in turn locates the map's marker accordingly
-    setCoords() {
-        let userInput = this.getLocationInputs();
-        let lat = this.inputRefs.lat.current.value;
-        let lng = this.inputRefs.lng.current.value;
+    const setCoords = () => {
+        const userInput = getLocationInputs();
+        const lat = inputRefs.lat.current.value;
+        const lng = inputRefs.lng.current.value;
 
-        let re = new RegExp(/^[-|+]?[0-9]*\.?[0-9]+$/g);
-        let latPatternValid = lat.match(re), lngPatternValid = lng.match(re);
-        let patternValid = latPatternValid && lngPatternValid;
+        const re = new RegExp(/^[-|+]?[0-9]*\.?[0-9]+$/g);
+        const latPatternValid = lat.match(re), lngPatternValid = lng.match(re);
+        const patternValid = latPatternValid && lngPatternValid;
 
 
         if (!patternValid) {
@@ -108,33 +101,33 @@ class LocationForm extends Component {
             }, 500);
 
             if (!latPatternValid) {
-                this.inputRefs.lat.current.classList.add('input-error');
-                this.inputRefs.lat.current.focus();
+                inputRefs.lat.current.classList.add('input-error');
+                inputRefs.lat.current.focus();
             }
             if (!lngPatternValid) {
-                this.inputRefs.lng.current.classList.add('input-error');
+                inputRefs.lng.current.classList.add('input-error');
                 if (latPatternValid) {
-                    this.inputRefs.lng.current.focus();
+                    inputRefs.lng.current.focus();
                 }
             }
         } else {
-            let _lat = Number(lat);
-            let _lng = Number(lng);
-            let latRangeValid = (_lat >= -90 && _lat <= 90), lngRangeValid = (_lng >= -180 && _lng <= 180);
-            let rangeValid = latRangeValid && lngRangeValid;
+            const _lat = Number(lat);
+            const _lng = Number(lng);
+            const latRangeValid = (_lat >= -90 && _lat <= 90), lngRangeValid = (_lng >= -180 && _lng <= 180);
+            const rangeValid = latRangeValid && lngRangeValid;
 
             if (!rangeValid) {
 
                 if (!latRangeValid) {
                     toast.error('Lat should be in the range of [-90, 90]');
-                    this.inputRefs.lat.current.classList.add('input-error');
-                    this.inputRefs.lat.current.focus();
+                    inputRefs.lat.current.classList.add('input-error');
+                    inputRefs.lat.current.focus();
                 }
                 if (!lngRangeValid) {
                     toast.error('Lng should be in the range of [-180, 180]');
-                    this.inputRefs.lng.current.classList.add('input-error');
+                    inputRefs.lng.current.classList.add('input-error');
                     if (latRangeValid) {
-                        this.inputRefs.lng.current.focus();
+                        inputRefs.lng.current.focus();
                     }
                 }
                 setTimeout(() => {
@@ -143,13 +136,13 @@ class LocationForm extends Component {
 
             } else if (lat !== userInput.lat || lng !== userInput.lng) {
 
-                this.inputRefs.lat.current.classList.remove('input-error');
-                this.inputRefs.lng.current.classList.remove('input-error');
+                inputRefs.lat.current.classList.remove('input-error');
+                inputRefs.lng.current.classList.remove('input-error');
 
                 userInput.lat = lat;
                 userInput.lng = lng;
 
-                this.props.updateLocationInput(userInput);
+                props.updateLocationInput(userInput);
             }
         }
     }
@@ -157,110 +150,110 @@ class LocationForm extends Component {
     // This function updates the coordinates inputs
     // Triggered by subcomponent MapContainer 
     // (Each time the user moves the marker manually, this function is called)
-    updateCoords() {
-        this.inputRefs.lat.current.classList.remove('input-error');
-        this.inputRefs.lng.current.classList.remove('input-error');
-        this.inputRefs.lat.current.value = this.props.input_location.lat;
-        this.inputRefs.lng.current.value = this.props.input_location.lng;
+    const updateCoords = () => {
+        inputRefs.lat.current.classList.remove('input-error');
+        inputRefs.lng.current.classList.remove('input-error');
+        inputRefs.lat.current.value = props.input_location.lat;
+        inputRefs.lng.current.value = props.input_location.lng;
     }
 
     // This function gets the location inputs from state
-    getLocationInputs() {
+    const getLocationInputs = () => {
         return {
-            category: this.props.input_location.category,
-            name: this.props.input_location.name,
-            address: this.props.input_location.address,
-            lat: this.props.input_location.lat,
-            lng: this.props.input_location.lng
+            category: props.input_location.category,
+            name: props.input_location.name,
+            address: props.input_location.address,
+            lat: props.input_location.lat,
+            lng: props.input_location.lng
         }
     }
 
     // This nested function searches the coordinates of an address 
     // suggested from GoogleAutocomplete (address input) and when found,
     // sets it to the coordinates input
-    getGeoCodeFromPlaceId(place_id) {
+    const getGeoCodeFromPlaceId = (place_id) => {
         geocodeByPlaceId(place_id)
             .then(results => {
-                let location = results[0].geometry.location;
-                let lat = location.lat();
-                let lng = location.lng();
+                const location = results[0].geometry.location;
+                const lat = location.lat();
+                const lng = location.lng();
 
-                this.inputRefs.lat.current.value = lat;
-                this.inputRefs.lng.current.value = lng;
-                this.inputRefs.lat.current.classList.remove('input-error');
-                this.inputRefs.lng.current.classList.remove('input-error');
+                inputRefs.lat.current.value = lat;
+                inputRefs.lng.current.value = lng;
+                inputRefs.lat.current.classList.remove('input-error');
+                inputRefs.lng.current.classList.remove('input-error');
 
-                let newInput = {
-                    category: this.props.input_location.category,
-                    name: this.props.input_location.name,
-                    address: this.props.input_location.address,
+                const newInput = {
+                    category: props.input_location.category,
+                    name: props.input_location.name,
+                    address: props.input_location.address,
                     lat: lat,
                     lng: lng
                 }
-                this.props.updateLocationInput(newInput);
+                props.updateLocationInput(newInput);
             })
             .catch(error => console.error(error));
     }
 
     // This function updates state with changed input
-    handleChange(e) {
+    const handleChange = (e) => {
         e.target.classList.remove('input-error');
 
-        let userInputs = this.getLocationInputs();
+        let userInputs = getLocationInputs();
         userInputs[e.target.name] = e.target.value;
 
-        this.props.updateLocationInput(userInputs);
+        props.updateLocationInput(userInputs);
     }
 
     // This function updates the coordinates according to an address suggestion
-    handleSelect(suggestion) {
-        this.formAddressContainerRef.current.classList.remove('input-error');
-        this.getGeoCodeFromPlaceId(suggestion.place_id);
+    const handleSelect = (suggestion) => {
+        formAddressContainerRef.current.classList.remove('input-error');
+        getGeoCodeFromPlaceId(suggestion.place_id);
     }
 
     // This function handles form submit
-    handleSubmit(e) {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
-        let userInputs = this.getLocationInputs();
+        let userInputs = getLocationInputs();
 
         // Form fully filled
-        if (this.formFilled) {
+        if (formFilled) {
 
             // Check if location name already exists in category
             let locationNameAlreadyExistsInCategory = false;
-            Object.keys(this.props.categories_data.find(val => val.name === userInputs.category).locations).forEach((key) => {
-                if (key === userInputs.name && key !== this.props.selected_location) {
+            Object.keys(props.categories_data.find(val => val.name === userInputs.category).locations).forEach((key) => {
+                if (key === userInputs.name && key !== props.selected_location) {
                     locationNameAlreadyExistsInCategory = true;
                 }
             })
 
             // Add 'input-error' class and focus if needed
             if (locationNameAlreadyExistsInCategory) {
-                this.inputRefs.name.current.classList.add('input-error');
+                inputRefs.name.current.classList.add('input-error');
                 toast.error('Location with this name already exists in this category!');
-                this.inputRefs.name.current.focus();
+                inputRefs.name.current.focus();
             } else {
                 // Replace the original values of the coordinates if needed
                 let timeoutAnimation = false;
-                if (this.inputRefs.lat.current.value !== userInputs.lat) {
-                    this.inputRefs.lat.current.value = userInputs.lat;
+                if (inputRefs.lat.current.value !== userInputs.lat) {
+                    inputRefs.lat.current.value = userInputs.lat;
                     timeoutAnimation = true;
                 }
-                if (this.inputRefs.lng.current.value !== userInputs.lng) {
-                    this.inputRefs.lng.current.value = userInputs.lng;
+                if (inputRefs.lng.current.value !== userInputs.lng) {
+                    inputRefs.lng.current.value = userInputs.lng;
                     if (!timeoutAnimation) {
                         timeoutAnimation = true;
                     }
                 }
 
                 // Submit action
-                switch (this.props.action) {
+                switch (props.action) {
                     case 'ADD':
-                        this.props.addLocation(userInputs);
+                        props.addLocation(userInputs);
                         break;
                     case 'EDIT':
-                        this.props.editLocation(userInputs);
+                        props.editLocation(userInputs);
                         break;
                     default:
                         break;
@@ -269,10 +262,10 @@ class LocationForm extends Component {
                 // Close form
                 if (timeoutAnimation) {
                     setTimeout(() => {
-                        this.closeForm();
+                        closeForm();
                     }, 50);
                 } else {
-                    this.closeForm();
+                    closeForm();
                 }
 
             }
@@ -286,10 +279,10 @@ class LocationForm extends Component {
                 if (!userInputs[key]) {
 
                     if (key === 'address') {
-                        currentInputRef = this.formAddressContainerRef;
+                        currentInputRef = formAddressContainerRef;
                         addressEmpty = true;
                     } else {
-                        currentInputRef = this.inputRefs[key];
+                        currentInputRef = inputRefs[key];
                     }
 
                     currentInputRef.current.classList.add('input-error');
@@ -315,54 +308,52 @@ class LocationForm extends Component {
     }
 
     // This function closes the form
-    closeForm() {
-        this.props.closeForm(null, true);
+    const closeForm = () => {
+        props.closeForm(null, true);
     }
 
-    render() {
-        return (
-            <div className="component-form-container" onMouseDown={this.props.closeForm}>
-                <div className="component-form w-form">
-                    <form className="component-form-inner" onSubmit={this.handleSubmit}>
-                        <div className='form-x-button-container'><h4 className='form-x-button' onClick={this.closeForm}>✖</h4></div>
-                        {this.props.action === 'ADD' && <label htmlFor="category" className="form-field-label">Location Category</label>}
-                        {this.props.action === 'ADD' &&
-                            <select data-name="category" name="category" required=""
-                                className="select-field w-select" onChange={this.handleChange} ref={this.inputRefs.category}>
-                                <option value="">Select category...</option>
-                                {this.props.categories_data.map((category, i) => {
-                                    return <option value={category.name} key={i}>{category.name}</option>
-                                })}
-                            </select>}
-                        <label htmlFor="name" className="form-field-label">Location Name</label>
-                        <input className="text-field-form w-input" maxLength="256" name="name" data-name="name"
-                            placeholder="My Beach House" type="text" required="" autoComplete="off" onChange={this.handleChange} ref={this.inputRefs.name} />
-                        <label htmlFor="address" className="form-field-label">Location Address</label>
-                        <div className="google-places-autocomplete-container" ref={this.formAddressContainerRef}>
-                            <GooglePlacesAutocomplete maxLength="256" name="address" data-name="address"
-                                placeholder="18555 Collins Ave, Sunny Isles Beach, FL" type="text" required="" autoComplete="off"
-                                initialValue={this.props.input_location.address} onSelect={this.handleSelect}
-                                onChange={this.handleChange} ref={this.inputRefs.address} /></div>
-                        <div className="component-form-coords">
-                            <div className="component-form-coords-manual">
-                                <label htmlFor="lat" className="form-field-label">lat</label>
-                                <input className="component-form-coords-textfield w-input" maxLength="256" name="lat"
-                                    data-name="lat" placeholder="25.761681" type="text" required="" autoComplete="off" ref={this.inputRefs.lat} />
-                                <label htmlFor="lng" className="form-field-label">lng</label>
-                                <input className="component-form-coords-textfield w-input" maxLength="256" name="lng"
-                                    data-name="lng" placeholder="-80.191788" type="text" required="" autoComplete="off" ref={this.inputRefs.lng} />
-                                <div className="component-form-coords-button" data-tip="Set the marker position by coordinates" onClick={this.setCoords}>SET</div>
-                            </div>
-                            <div className="component-form-coords-map"><MapContainer updateCoords={this.updateCoords} /></div>
+    return (
+        <div className="component-form-container" onMouseDown={props.closeForm}>
+            <div className="component-form w-form">
+                <form className="component-form-inner" onSubmit={handleSubmit}>
+                    <div className='form-x-button-container'><h4 className='form-x-button' onClick={closeForm}>✖</h4></div>
+                    {props.action === 'ADD' && <label htmlFor="category" className="form-field-label">Location Category</label>}
+                    {props.action === 'ADD' &&
+                        <select data-name="category" name="category" required=""
+                            className="select-field w-select" onChange={handleChange} ref={inputRefs.category}>
+                            <option value="">Select category...</option>
+                            {props.categories_data.map((category, i) => {
+                                return <option value={category.name} key={i}>{category.name}</option>
+                            })}
+                        </select>}
+                    <label htmlFor="name" className="form-field-label">Location Name</label>
+                    <input className="text-field-form w-input" maxLength="256" name="name" data-name="name"
+                        placeholder="My Beach House" type="text" required="" autoComplete="off" onChange={handleChange} ref={inputRefs.name} />
+                    <label htmlFor="address" className="form-field-label">Location Address</label>
+                    <div className="google-places-autocomplete-container" ref={formAddressContainerRef}>
+                        <GooglePlacesAutocomplete maxLength="256" name="address" data-name="address"
+                            placeholder="18555 Collins Ave, Sunny Isles Beach, FL" type="text" required="" autoComplete="off"
+                            initialValue={props.input_location.address} onSelect={handleSelect}
+                            onChange={handleChange} ref={inputRefs.address} /></div>
+                    <div className="component-form-coords">
+                        <div className="component-form-coords-manual">
+                            <label htmlFor="lat" className="form-field-label">lat</label>
+                            <input className="component-form-coords-textfield w-input" maxLength="256" name="lat"
+                                data-name="lat" placeholder="25.761681" type="text" required="" autoComplete="off" ref={inputRefs.lat} />
+                            <label htmlFor="lng" className="form-field-label">lng</label>
+                            <input className="component-form-coords-textfield w-input" maxLength="256" name="lng"
+                                data-name="lng" placeholder="-80.191788" type="text" required="" autoComplete="off" ref={inputRefs.lng} />
+                            <div className="component-form-coords-button" data-tip="Set the marker position by coordinates" onClick={setCoords}>SET</div>
                         </div>
-                        <input type="submit" data-wait="Please wait..."
-                            className="component-form-submit w-button inactive" value="APPLY" ref={this.formSubmitRef} />
-                    </form>
-                </div>
-                <ReactTooltip />
+                        <div className="component-form-coords-map"><MapContainer updateCoords={updateCoords} /></div>
+                    </div>
+                    <input type="submit" data-wait="Please wait..."
+                        className="component-form-submit w-button inactive" value="APPLY" ref={formSubmitRef} />
+                </form>
             </div>
-        );
-    }
+            <ReactTooltip />
+        </div>
+    );
 }
 
 const mapStateToProps = (state) => {

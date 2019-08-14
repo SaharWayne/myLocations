@@ -125,6 +125,7 @@
 }
 
 .component-form {
+  width: 95%;
   max-width: 465px;
   margin-top: 10px;
   margin-right: 10px;
@@ -393,7 +394,7 @@ option {
 .swal-modal {
   font-family: "Open Sans", sans-serif !important;
   width: unset !important;
-  min-width: 400px !important;
+  width: 90% !important;
   max-width: 450px !important;
 }
 
@@ -410,6 +411,10 @@ option {
 
 .swal-footer {
   margin-top: 10px !important;
+}
+
+.swal-button-container:hover {
+  filter: saturate(120%) !important;
 }
 
 /* ---------- Toastify ---------- */
