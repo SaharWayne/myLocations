@@ -11,7 +11,7 @@ const CategoryForm = (props) => {
     const [formFilled, setFormFilled] = useState(props.action === 'EDIT');
 
     useEffect(() => {
-        // If the used clicked 'EDIT', fill the form with the existing data
+        // If the user clicked 'EDIT', fill the form with the existing data
         if (props.action === 'EDIT') {
             inputRefs.name.current.value = props.selected_category;
         }

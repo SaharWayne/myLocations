@@ -1,71 +1,71 @@
-export function addCategory(name) {
+export const addCategory = name => {
     return { type: 'ADD_CATEGORY', payload: name };
 }
 
-export function addLocation(name) {
+export const addLocation = name => {
     return { type: 'ADD_LOCATION', payload: name };
 }
 
-export function editCategory(input) {
+export const editCategory = input => {
     return { type: 'EDIT_CATEGORY', payload: input };
 }
 
-export function editLocation(input) {
+export const editLocation = input => {
     return { type: 'EDIT_LOCATION', payload: input };
 }
 
-export function removeCategory(name) {
+export const removeCategory = name => {
     return { type: 'REMOVE_CATEGORY', payload: name };
 }
 
-export function removeLocation(name) {
+export const removeLocation = name => {
     return { type: 'REMOVE_LOCATION', payload: name };
 }
 
-export function resetCategoryInput() {
+export const resetCategoryInput = () => {
     return { type: 'RESET_CATEGORY_INPUT' };
 }
 
-export function resetLocationInput() {
+export const resetLocationInput = () => {
     return { type: 'RESET_LOCATION_INPUT' };
 }
 
-export function setSelectedCategory(name) {
+export const setSelectedCategory = name => {
     return { type: 'SET_SELECTED_CATEGORY', payload: name };
 }
 
-export function setSelectedLocation(name) {
+export const setSelectedLocation = name => {
     return { type: 'SET_SELECTED_LOCATION', payload: name };
 }
 
-export function setUngroupedCategory(name) {
+export const setUngroupedCategory = name => {
     return { type: 'SET_UNGROUPED_CATEGPRY', payload: name };
 }
 
-export function setViewMode(mode) {
+export const setViewMode = mode => {
     return { type: 'SET_VIEW_MODE', payload: mode };
 }
 
-export function updateCategoryInput(input) {
+export const updateCategoryInput = input => {
     return { type: 'UPDATE_CATEGORY_INPUT', payload: input };
 }
 
-export function updateLocationInput(input) {
+export const updateLocationInput = input => {
     return { type: 'UPDATE_LOCATION_INPUT', payload: input };
 }
 
-export function updateMapPosition(position) {
+export const updateMapPosition = position => {
     return { type: 'UPDATE_MAP_POSITION', payload: position };
 }
 
-export function updateMapAddress(address) {
+export const updateMapAddress = address => {
     return { type: 'UPDATE_MAP_ADDRESS', payload: address };
 }
 
-export function setLocationDialogState(state) {
+export const setLocationDialogState = state => {
     return { type: 'SET_LOCATION_DIALOG_STATE', payload: state };
 }
 
-export function setCategoryDialogState(state) {
+export const setCategoryDialogState = state => {
     return { type: 'SET_CATEGORY_DIALOG_STATE', payload: state };
 }

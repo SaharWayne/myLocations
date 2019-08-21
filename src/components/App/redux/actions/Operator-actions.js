@@ -1,11 +1,11 @@
-export function activateScreen(screen) {
+export const activateScreen = screen => {
     return { type: 'ACTIVATE_SCREEN', payload: screen };
 }
 
-export function setAction(action) {
+export const setAction = action => {
     return { type: 'SET_ACTION', payload: action };
 }
 
-export function resetAction() {
+export const resetAction = () => {
     return { type: 'RESET_ACTION' }
 }

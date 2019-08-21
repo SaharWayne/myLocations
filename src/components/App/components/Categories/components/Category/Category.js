@@ -7,7 +7,6 @@ import * as actions_data from '../../../../redux/actions/Data-actions';
 
 const Category = (props) => {
 
-
     // This function handles location click according to the current action
     const handleCategoryClick = () => {
         if (props.action !== '') { // action ADD/EDIT/REMOVE
@@ -18,7 +17,7 @@ const Category = (props) => {
             if (props.action === 'REMOVE') {
 
                 // Define remove function
-                let removeFunc = () => {
+                const removeFunc = () => {
                     if (props.categories_data.length === 1) {
                         props.disableCurrentAction(null, true);
                     }
